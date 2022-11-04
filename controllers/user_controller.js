@@ -5,7 +5,9 @@ const { uuid } = require('uuidv4');
 
 const HttpError = require('../models/http-error');
 const User = require('../schemas/user_schema');
-// const { selectFields } = require('express-validator/src/select-fields');
+const UserService = require('../services/user_service');
+const Role = require('../_helpers/role');
+
 
 
 const saveUser = async (req, res, next) => {
@@ -16,7 +18,7 @@ const saveUser = async (req, res, next) => {
         return next(new HttpError('Invalid inputs! Please check again.',422));
     }
 
-    const { email,firstName,lastName,password,role } = req.body;
+    const { username,email,firstName,lastName,password,role } = req.body;
 
     let existingUser;
     try{
@@ -42,6 +44,7 @@ const saveUser = async (req, res, next) => {
 
     const newUser = new User({
         userid: uuid(),
+        username,
         firstName,
         lastName,
         email,
@@ -67,4 +70,34 @@ const saveUser = async (req, res, next) => {
 
 }
 
+const authenticate = async(req, res, next) =>{
+  UserService.authenticate(req.body)
+    .then(user => user ? res.json(user) : res.status(400).json({ message: 'user name or password incorrect'}))
+    .catch(err => next(err));
+}
+
+const getAllUsers = async(req, res, next) => {
+  UserService.getAllUsers()
+    .then(users => res.json(users))
+    .catch(err => next(err));
+}
+
+const getUserById = async(req, res, next) => {
+  const currentUser = req.user;
+  const id = parseInt(req.params.id);
+
+  if (id !== currentUser.sub && currentUser.role !== Role.Admin){
+    return res.status(401).json({ message: 'Unauthorized' });
+  }
+
+  UserService.getUserById(req.params.id)
+    .then(user => user? res.json(user) : res.sendStatus(404))
+    .catch(err => next(err));
+
+}
+
+exports.getUserById =  getUserById;
+exports.getAllUsers = getAllUsers;
 exports.saveUser = saveUser;
+exports.authenticate = authenticate;
+
