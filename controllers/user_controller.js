@@ -71,22 +71,23 @@ const saveUser = async (req, res, next) => {
 }
 
 const authenticate = async(req, res, next) =>{
-  UserService.authenticate(req.body)
+  UserService.authenticate({ username: req.body.username, password: req.body.password })
     .then(user => user ? res.json(user) : res.status(400).json({ message: 'user name or password incorrect'}))
     .catch(err => next(err));
 }
 
-const getAllUsers = async(req, res, next) => {
-  UserService.getAllUsers()
-    .then(users => res.json(users))
-    .catch(err => next(err));
-}
+// const getAllUsers = async(req, res, next) => {
+//   UserService.getAllUsers()
+//     .then(users => res.json(users))
+//     .catch(err => next(err));
+// }
 
 const getUserById = async(req, res, next) => {
-  const currentUser = req.user;
-  const id = parseInt(req.params.id);
+  // console.log("sddsaasda",req.auth)
+  const currentUser = req.auth;
+  const id = req.params.id;
 
-  if (id !== currentUser.sub && currentUser.role !== Role.Admin){
+  if (id !== currentUser.sub){
     return res.status(401).json({ message: 'Unauthorized' });
   }
 
@@ -97,7 +98,7 @@ const getUserById = async(req, res, next) => {
 }
 
 exports.getUserById =  getUserById;
-exports.getAllUsers = getAllUsers;
+// exports.getAllUsers = getAllUsers;
 exports.saveUser = saveUser;
 exports.authenticate = authenticate;
 
