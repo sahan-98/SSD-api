@@ -14,6 +14,8 @@ require('dotenv').config({path: __dirname + '/.env'})
     *    here */
 
 const UserRoutes = require('./routes/user_routes');
+const MessageRoutes = require('./routes/message_routes');
+const DocumentRoutes = require('./routes/document_routes');
 
 
 const MONGO_DB_PASSWORD = process.env['MONGO_DB_PASSWORD'];
@@ -46,6 +48,8 @@ app.use(errorHandler);
 //app.use('/', UserRoutes);
 
 app.use('/api/v1/users/', UserRoutes);
+app.use('/api/v1/message/', MessageRoutes);
+app.use('/api/v1/document/', DocumentRoutes);
 
 
 
