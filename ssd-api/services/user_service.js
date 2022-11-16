@@ -18,12 +18,6 @@ const authenticate = async ({ username,password }) => {
     } 
   }
   
-  // const getAllUsers = async () => {
-  //   return User.map(u => {
-  //       const { password, ...userWithoutPassword } = u;
-  //       return userWithoutPassword;
-  //   })
-  // }
 
   const getUserById = async (userid) => {
     const userObj = await User.findOne({ userid });
@@ -37,4 +31,3 @@ const authenticate = async ({ username,password }) => {
   
   exports.getUserById = getUserById;
   exports.authenticate = authenticate;
-  // exports.getAllUsers = getAllUsers;
