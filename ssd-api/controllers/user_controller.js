@@ -76,14 +76,8 @@ const authenticate = async(req, res, next) =>{
     .catch(err => next(err));
 }
 
-// const getAllUsers = async(req, res, next) => {
-//   UserService.getAllUsers()
-//     .then(users => res.json(users))
-//     .catch(err => next(err));
-// }
 
 const getUserById = async(req, res, next) => {
-  // console.log("sddsaasda",req.auth)
   const currentUser = req.auth;
   const id = req.params.id;
 
@@ -98,7 +92,6 @@ const getUserById = async(req, res, next) => {
 }
 
 exports.getUserById =  getUserById;
-// exports.getAllUsers = getAllUsers;
 exports.saveUser = saveUser;
 exports.authenticate = authenticate;
 
